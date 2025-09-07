@@ -1,15 +1,25 @@
-// -------------------- Global Variables --------------------
+
 let cart = [];
 const plantsContainer = document.getElementById("plants-container");
-const cartContainer = document.getElementById("cart-container"); // You need a div in HTML for cart
-const totalPriceEl = document.getElementById("total-price"); // Add an element to show total
 
-// -------------------- Show Spinner --------------------
+const cartContainer = document.getElementById("cart-container");
+
+const totalPriceEl = document.getElementById("total-price");
+
+
+
+
+// -------------------- The Spinner --------------------
 const showSpinner = () => {
-    plantsContainer.innerHTML = `<div class="flex justify-center items-center p-20">
-        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-700"></div>
-    </div>`;
+    plantsContainer.innerHTML = `
+    <div class="flex justify-center items-center p-20">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-700">
+        </div>
+    </div>
+    `;
 };
+
+
 
 // -------------------- Load Categories --------------------
 const loadCategories = () => {
@@ -25,10 +35,13 @@ const displayCategories = (categories) => {
     categories.forEach(category => {
         const btn = document.createElement("button");
         btn.className = "block w-full text-left px-4 py-2 my-1 rounded hover:bg-green-200";
-        btn.innerHTML = `<h3 class="font-medium">${category.category_name}</h3>`;
+        btn.innerHTML = `
+        <h3 class="font-medium">${category.category_name}</h3>
+        `;
+
+        // Active button highlight
 
         btn.addEventListener("click", () => {
-            // Active button highlight
             document.querySelectorAll("#categories-container button").forEach(b => {
                 b.classList.remove("bg-green-700", "text-white");
             });
@@ -41,6 +54,8 @@ const displayCategories = (categories) => {
     });
 };
 
+
+
 // -------------------- Load Trees by Category --------------------
 const loadTreesByCategory = (categoryId) => {
     showSpinner();
@@ -48,26 +63,16 @@ const loadTreesByCategory = (categoryId) => {
     fetch(`https://openapi.programming-hero.com/api/category/${categoryId}`)
         .then(res => res.json())
         .then(json => {
-            // Some categories might return data differently
             const trees = json?.data || json?.plants || [];
             displayTrees(trees);
         })
         .catch(err => {
-            plantsContainer.innerHTML = `<p class="text-center text-red-600 py-10">Failed to load trees.</p>`;
+            plantsContainer.innerHTML = `
+            <p class="text-center text-red-600 py-10">Failed to load trees.</p>
+            `;
             console.error(err);
         });
 };
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -108,7 +113,7 @@ const displayTrees = (trees) => {
 
         plantsContainer.appendChild(card);
 
-        // Click on tree name opens modal
+        // Click on tree name then it will opens modal
         card.querySelector("h2").addEventListener("click", () => openModal({
             name,
             image,
@@ -117,10 +122,12 @@ const displayTrees = (trees) => {
             description
         }));
 
-        // Add to Cart functionality
-        card.querySelector("button").addEventListener("click", () => addToCart({name, price}));
+        // Add to Cart 
+        card.querySelector("button").addEventListener("click", () => addToCart({ name, price }));
     });
 };
+
+
 
 // -------------------- Cart Functions --------------------
 const addToCart = (tree) => {
@@ -156,6 +163,9 @@ const updateCart = () => {
     totalPriceEl.textContent = total;
 };
 
+
+
+
 // -------------------- Modal Functions --------------------
 const openModal = (tree) => {
     const modal = document.getElementById("tree-modal");
@@ -173,7 +183,9 @@ document.getElementById("modal-close").addEventListener("click", () => {
     document.getElementById("tree-modal").classList.add("hidden");
 });
 
-// -------------------- Initial Load --------------------
+
+
+
 loadCategories();
 const loadPlants = () => {
     showSpinner();
