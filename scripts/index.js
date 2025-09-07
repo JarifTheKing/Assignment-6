@@ -1,3 +1,16 @@
+// -------------------- Global Variables --------------------
+let cart = [];
+const plantsContainer = document.getElementById("plants-container");
+const cartContainer = document.getElementById("cart-container"); // You need a div in HTML for cart
+const totalPriceEl = document.getElementById("total-price"); // Add an element to show total
+
+// -------------------- Show Spinner --------------------
+const showSpinner = () => {
+    plantsContainer.innerHTML = `<div class="flex justify-center items-center p-20">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-700"></div>
+    </div>`;
+};
+
 // -------------------- Load Categories --------------------
 const loadCategories = () => {
     fetch("https://openapi.programming-hero.com/api/categories")
@@ -15,10 +28,12 @@ const displayCategories = (categories) => {
         btn.innerHTML = `<h3 class="font-medium">${category.category_name}</h3>`;
 
         btn.addEventListener("click", () => {
+            // Active button highlight
             document.querySelectorAll("#categories-container button").forEach(b => {
                 b.classList.remove("bg-green-700", "text-white");
             });
             btn.classList.add("bg-green-700", "text-white");
+
             loadTreesByCategory(category.id);
         });
 
@@ -28,21 +43,44 @@ const displayCategories = (categories) => {
 
 // -------------------- Load Trees by Category --------------------
 const loadTreesByCategory = (categoryId) => {
+    showSpinner();
+
     fetch(`https://openapi.programming-hero.com/api/category/${categoryId}`)
         .then(res => res.json())
-        .then(json => displayTrees(json.data || []));
+        .then(json => {
+            // Some categories might return data differently
+            const trees = json?.data || json?.plants || [];
+            displayTrees(trees);
+        })
+        .catch(err => {
+            plantsContainer.innerHTML = `<p class="text-center text-red-600 py-10">Failed to load trees.</p>`;
+            console.error(err);
+        });
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // -------------------- Display Tree Cards --------------------
 const displayTrees = (trees) => {
-    const container = document.getElementById("plants-container");
-    container.innerHTML = "";
-
+    plantsContainer.innerHTML = "";
     const seenNames = new Set();
 
     trees.forEach(tree => {
         const name = tree?.name || tree?.plant_name || "Unknown Tree";
-        if (seenNames.has(name)) return; // skip duplicates
+        if (seenNames.has(name)) return;
         seenNames.add(name);
 
         const image = tree?.image || "./assets/default-tree.png";
@@ -68,7 +106,7 @@ const displayTrees = (trees) => {
             </div>
         `;
 
-        container.appendChild(card);
+        plantsContainer.appendChild(card);
 
         // Click on tree name opens modal
         card.querySelector("h2").addEventListener("click", () => openModal({
@@ -78,10 +116,45 @@ const displayTrees = (trees) => {
             price,
             description
         }));
+
+        // Add to Cart functionality
+        card.querySelector("button").addEventListener("click", () => addToCart({name, price}));
     });
 };
 
+// -------------------- Cart Functions --------------------
+const addToCart = (tree) => {
+    cart.push(tree);
+    updateCart();
+};
 
+const removeFromCart = (index) => {
+    cart.splice(index, 1);
+    updateCart();
+};
+
+const updateCart = () => {
+    if (!cartContainer || !totalPriceEl) return;
+
+    cartContainer.innerHTML = "";
+    cart.forEach((tree, index) => {
+        const item = document.createElement("div");
+        item.className = "flex justify-between items-center border-b py-2";
+        item.innerHTML = `
+            <span>${tree.name}</span>
+            <div class="flex items-center gap-2">
+                <span>৳${tree.price}</span>
+                <button class="text-red-600 font-bold">❌</button>
+            </div>
+        `;
+        cartContainer.appendChild(item);
+
+        item.querySelector("button").addEventListener("click", () => removeFromCart(index));
+    });
+
+    const total = cart.reduce((sum, t) => sum + t.price, 0);
+    totalPriceEl.textContent = total;
+};
 
 // -------------------- Modal Functions --------------------
 const openModal = (tree) => {
@@ -102,12 +175,10 @@ document.getElementById("modal-close").addEventListener("click", () => {
 
 // -------------------- Initial Load --------------------
 loadCategories();
-
-// Optional: Load first 6 plants initially
 const loadPlants = () => {
+    showSpinner();
     fetch("https://openapi.programming-hero.com/api/plants")
         .then(res => res.json())
         .then(json => displayTrees(json.plants.slice(0, 6)));
 };
-
 loadPlants();
