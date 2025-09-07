@@ -89,65 +89,48 @@
 
 
 
-        <!-- Categories -->
-        <section class="bg-[#15803c21] px-20 space-y-5 pt-10">
-            <!-- <h2 class="text-2xl font-bold text-start ">
-                Categories
-            </h2> -->
 
-            <div class="grid grid-cols-5 gap-4 ">
 
-                <!-- Categories List -->
-                <div id="categories-container" class=" col-span-1 bg-slate-500">
-
-                </div>
-
-                <!-- Tree Card -->
-                <div class="col-span-3 bg-red-300 p-4">
-                    <h2 class="text-2xl font-bold text-center mb-10">
-                        Choose Your Trees
-                    </h2>
-
-       <div id="plants-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        <!-- Categories & Trees -->
+        <section class="bg-[#15803c21] px-5 md:px-20 space-y-5 pt-10">
 
 
 
-                        <!-- Card 1 -->
-                        <!-- <div class="card bg-base-100 w-96 shadow-sm">
-                            <figure>
-                                <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-                                    alt="" />
-                            </figure>
-                            <div class="card-body">
-                                <h2 class="card-title">
-                                    Mango Tree
-                                    
-                                </h2>
-                                <p>A fast-growing tropical tree that produces delicious, juicy mangoes during summer.
-                                    Its dense green</p>
-                                <div class="card-actions justify-between">
-                                    <div class="badge font-bold text-[#15803cee]  bg-[#15803c1e]">Fruit Tree</div>
-                                    <div class="badge font-bold">৳500</div>
-                                </div>
-                                <button class="btn w-full bg-[#15803D] text-white border-[#f1d800] rounded-full">
-                                    Donate Now
-                                </button>
-                            </div>
-                        </div> -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 w-full">
 
 
-
+                <!-- Categories -->
+                <div id="categories-container" class="mt-15 p-4 md:col-span-1">
                     
                 </div>
 
 
-                <div class="col-span-1 bg-green-300 p-4">
 
+                <!-- Tree Cards -->
+                <div class=" p-4 md:col-span-3">
+                    <h2 class="text-2xl font-bold text-center mb-10">Choose Your Trees</h2>
+                    <div id="plants-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </div>
 
+
+
+                <div class=" p-4 md:col-span-1"></div>
             </div>
         </section>
-        <!-- Categories -->
+
+        <!-- Modal -->
+        <div id="tree-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-6 w-96 relative">
+                <button id="modal-close" class="absolute top-2 right-2 text-gray-600 text-lg font-bold">✖</button>
+                <div id="modal-content">
+                    <h2 class="modal-title text-2xl font-bold mb-2"></h2>
+                    <img src="" alt="" class="modal-image w-full h-64 object-cover rounded mb-4">
+                    <p><span class="font-semibold">Category:</span> <span class="modal-category"></span></p>
+                    <p><span class="font-semibold">Price:</span> ৳<span class="modal-price"></span></p>
+                    <p class="modal-description mt-2"></p>
+                </div>
+            </div>
+        </div>
 
 
 
@@ -259,6 +242,9 @@
             </div>
         </section>
         <!-- Today Plant -->
+
+
+
 
     </main>
 
